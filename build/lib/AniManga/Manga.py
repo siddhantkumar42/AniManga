@@ -13,7 +13,7 @@ class Manga:
 		self.base_manga_reviews = "https://www.anime-planet.com/manga/{}/reviews"
 
     #helper functions
-	def check_if_exists(self,manga:str) -> bool:
+	def check_if_exists(self,manga):
 		r = requests.get("https://www.anime-planet.com/manga/{}".format(manga))
 		soup = BeautifulSoup(r.content, "html5lib")
 
