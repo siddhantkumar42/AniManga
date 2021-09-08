@@ -1,5 +1,7 @@
 # AniManga 
 
+![python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+
 AniManga is a python module which scrapes the web to get information on Anime, Manga (and hentai).
 
 ## Installation
@@ -28,6 +30,15 @@ Output:
 
 Detailed docs will soon be available.
 
-## Acknowledgement
+## Acknowledgements
 ### Sites scraped:
 - [Anime-Planet](https://animeplanet.com)
+
+## Author(s):
+<table>
+<thead>
+<tr>
+<th align="center"><a href="https://github.com/centipede000"><img src="https://github.com/centipede000.png?size=115" width="115" style="max-width: 100%;"><br><sub>@centipede000</sub></a></th>
+</tr>
+</thead>
+</table>
