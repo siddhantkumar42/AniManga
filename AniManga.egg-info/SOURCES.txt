@@ -8,3 +8,5 @@ AniManga.egg-info/SOURCES.txt
 AniManga.egg-info/dependency_links.txt
 AniManga.egg-info/requires.txt
 AniManga.egg-info/top_level.txt
+AniManga/helpers/MangaHelpers.py
+AniManga/helpers/__init__.py

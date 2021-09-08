@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from AniManga.helpers.MangaHelpers import check_if_exists, format
 
 class Manga:
 	'''
@@ -12,31 +13,15 @@ class Manga:
 		self.base_manga_url = "https://www.anime-planet.com/manga/"
 		self.base_manga_reviews = "https://www.anime-planet.com/manga/{}/reviews"
 
-    #helper functions
-	def check_if_exists(self,manga:str) -> bool:
-		r = requests.get("https://www.anime-planet.com/manga/{}".format(manga))
-		soup = BeautifulSoup(r.content, "html5lib")
-
-		results = soup.find("meta", property="og:title")
-
-		if not results:
-			return False
-		else:
-			return True
-
-
-	def format(self,manga: str) -> str:
-		return manga.lower().replace(" ", "-")
-
     #main functions
 	def get_manga_reviews(self, manga: str) -> list:
 		'''
 		Get the reviews of a manga.
 		'''
-		manga = self.format(manga)
+		manga = format(manga)
 		r = requests.get(self.base_manga_reviews.format(manga))
 		soup = BeautifulSoup(r.content, "html5lib")
-		if self.check_if_exists(manga):
+		if check_if_exists(manga):
 			reviews = soup.find_all("div", {"class":"pure-1 userContent readMore"})
 			review_list = []
 
@@ -66,11 +51,11 @@ class Manga:
 		'''
 		Get information on a manga.
 		'''
-		manga = self.format(manga)
+		manga = format(manga)
 		r = requests.get(self.base_manga_url + f"{manga}")
 		soup = BeautifulSoup(r.content, "html5lib")
 
-		if self.check_if_exists(manga):
+		if check_if_exists(manga):
 			dict = {}
 			dict["title"] = soup.find("meta", property="og:title")["content"]
 			dict["description"] = soup.find("meta", property="og:description")["content"]
@@ -123,3 +108,21 @@ class Manga:
 			return x["author"]
 		except:
 			return x
+
+	def get_popular_manga(self) -> list:
+		'''
+		Gets current popular manga according to Anime-Planet.
+		'''
+		r = requests.get("https://www.anime-planet.com/manga/all")
+		soup = BeautifulSoup(r.content, "html5lib")
+
+		x = soup.find_all("ul", {"class":"cardDeck cardGrid"})
+
+		list = []
+
+		for ultag in x:
+			for y in ultag.find_all("li"):
+				y = y.text.replace("Add to list ", "").replace("\n", "")
+				list.append(y)
+		
+		return list
