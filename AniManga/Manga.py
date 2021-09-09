@@ -62,7 +62,8 @@ class Manga:
 			for x in tags:
 				x = x.find_all("li")
 				for z in x:
-					tags_list.append(z.text)
+					z = z.text.replace("\n", "")
+					tags_list.append(z)
 			
 			return tags_list
 		else:
