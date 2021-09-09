@@ -12,6 +12,7 @@ class Manga:
 		'''
 		self.base_manga_url = "https://www.anime-planet.com/manga/"
 		self.base_manga_reviews = "https://www.anime-planet.com/manga/{}/reviews"
+		self.base_manga_tags = "https://www.anime-planet.com/manga/"
 
     #main functions
 	def get_manga_reviews(self, manga: str) -> list:
@@ -46,7 +47,27 @@ class Manga:
 		else:
 			return "We could not find that."
 
+	def get_manga_tags(self, manga: str) -> list:
+		'''
+		Get the tags of a manga.
+		'''
+		manga = format(manga)
+		r = requests.get(self.base_manga_tags + manga)
+		soup = BeautifulSoup(r.content, "html5lib")
+		tags = soup.find_all("div", {"class":"tags"})
 
+		if check_if_exists(manga):
+			tags_list = []
+
+			for x in tags:
+				x = x.find_all("li")
+				for z in x:
+					tags_list.append(z.text)
+			
+			return tags_list
+		else:
+			return "We could not find that."
+	
 	def get_manga_info(self, manga: str) -> dict:
 		'''
 		Get information on a manga.
@@ -64,6 +85,7 @@ class Manga:
 			dict["author"] = soup.find("meta", property="book:author")["content"]
 			dict["author"] = dict["author"].replace("https://www.anime-planet.com/people/","")
 			dict["cover"] = soup.find("meta", property="og:image")["content"]
+			dict["tags"] = self.get_manga_tags(manga)
 			dict["reviews"] = self.get_manga_reviews(manga)
 			return dict
 		else:
