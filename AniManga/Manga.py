@@ -4,10 +4,14 @@ Get manga related stuff.
 =====================
 """
 
-import requests
+import aiohttp, asyncio
 from bs4 import BeautifulSoup
 from AniManga.helpers.MangaHelpers import check_if_exists, format
 
+async def req(link):
+  async with aiohttp.ClientSession() as session:
+    async with session.get(link) as resp:
+      return await resp.content.read()
 
 class Manga:
     """
@@ -22,16 +26,16 @@ class Manga:
         self.base_manga_reviews = "https://www.anime-planet.com/manga/{}/reviews"
         self.base_manga_tags = "https://www.anime-planet.com/manga/"
 
-    def get_manga_json(self, manga: str) -> dict:
+    async def get_manga_json(self, manga: str) -> dict:
         """
         Get information on a manga.
         """
         manga = format(manga)
-        r = requests.get(self.base_manga_url + f"{manga}")
-        soup = BeautifulSoup(r.content, "html5lib")
+        r = await req("https://www.anime-planet.com/manga/" + f"{manga}")
+        soup = BeautifulSoup(r, "html5lib")
         tags = soup.find_all("div", {"class": "tags"})
-        rr = requests.get(self.base_manga_reviews.format(manga))
-        rsoup = BeautifulSoup(rr.content, "html5lib")
+        rr = await req("https://www.anime-planet.com/manga/{}/reviews".format(manga))
+        rsoup = BeautifulSoup(rr, "html5lib")
 
         if check_if_exists(manga):
 
@@ -106,126 +110,126 @@ class Manga:
         else:
             return "We could not find that."
 
-    def get_manga_description(self, manga: str) -> str:
+    async def get_manga_description(self, manga: str) -> str:
         """
         Get manga description.
         """
-        x = self.get_manga_json(manga)
+        x = await self.get_manga_json(Manga, manga)
         try:
             return x["description"]
         except:
             return "We could not find that"
 
-    def get_manga_url(self, manga: str) -> str:
+    async def get_manga_url(self, manga: str) -> str:
         """
         Get Anime-Planet link of a manga.
         """
-        x = self.get_manga_json(manga)
+        x = await self.get_manga_json(manga)
         try:
             return x["url"]
         except:
             return "We could not find that"
 
-    def get_manga_size(self, manga: str) -> str:
+    async def get_manga_size(self, manga: str) -> str:
         """
         Get size of a manga.
         """
-        x = self.get_manga_json(manga)
+        x = await self.get_manga_json(manga)
         try:
             return x["size"]
         except:
             return "We could not find that"
 
-    def get_manga_year(self, manga: str) -> str:
+    async def get_manga_year(self, manga: str) -> str:
         """
         Get the years the manga ran.
         """
-        x = self.get_manga_json(manga)
+        x = await self.get_manga_json(manga)
         try:
             return x["year"]
         except:
             return "[year] We could not find that"
 
-    def get_manga_rating(self, manga: str) -> str:
+    async def get_manga_rating(self, manga: str) -> str:
         """
         Get rating of a manga according to Anime-Planet.
         """
-        x = self.get_manga_json(manga)
+        x = await self.get_manga_json(manga)
         try:
             return x["rating"]
         except:
             return "We could not find that"
 
-    def get_manga_rank(self, manga: str) -> str:
+    async def get_manga_rank(self, manga: str) -> str:
         """
         Get rank of the manga according to Anime-Planet.
         """
-        x = self.get_manga_json(manga)
+        x = await self.get_manga_json(manga)
         try:
             return x["rank"]
         except:
             return "We could not find that"
 
-    def get_manga_cover(self, manga: str) -> str:
+    async def get_manga_cover(self, manga: str) -> str:
         """
         Get cover image of manga.
         """
-        x = self.get_manga_json(manga)
+        x = await self.get_manga_json(manga)
         try:
             return x["cover"]
         except:
             return "We could not find that"
 
-    def get_manga_author(self, manga: str) -> str:
+    async def get_manga_author(self, manga: str) -> str:
         """
         Get author of a manga.
         """
-        x = self.get_manga_json(manga)
+        x = await self.get_manga_json(manga)
         try:
             return x["author"]
         except:
             return "We could not find that"
 
-    def get_manga_tags(self, manga: str) -> list:
+    async def get_manga_tags(self, manga: str) -> list:
         """
         Get the tags of a manga.
         """
 
-        x = self.get_manga_json(manga)
+        x = await self.get_manga_json(manga)
         try:
             return x["tags"]
         except:
             return "We could not find that"
 
-    def get_manga_content_warning(self, manga: str) -> list:
+    async def get_manga_content_warning(self, manga: str) -> list:
         """
         Get content warning of a manga.
         """
-        x = self.get_manga_json(manga)
+        x = await self.get_manga_json(manga)
         try:
             return x["content warning"]
         except:
             return "We could not find that"
 
-    def get_manga_reviews(self, manga: str) -> list:
+    async def get_manga_reviews(self, manga: str) -> list:
         """
         Get the reviews of a manga.
         """
 
-        x = self.get_manga_json(manga)
+        x = await self.get_manga_json(manga)
 
         try:
             return x["reviews"]
         except:
             return "We could not find that."
 
-    def get_manga_characters(self, manga: str) -> list:
+    async def get_manga_characters(self, manga: str) -> list:
         """
         Get the characters of a manga.
         """
         manga = format(manga)
-        r = requests.get("https://www.anime-planet.com/manga/{}/characters".format(manga))
-        soup = BeautifulSoup(r.content, "html5lib")
+        r = await req("https://www.anime-planet.com/manga/{}/characters".format(manga))
+        soup = BeautifulSoup(r, "html5lib")
 
         character_list = []
 
@@ -239,13 +243,13 @@ class Manga:
         except:
             return "We could not find that."
 
-    def get_popular_manga(self) -> list:
+    async def get_popular_manga(self) -> list:
         """
         Gets current popular manga according to Anime-Planet.
         """
 
-        r = requests.get("https://www.anime-planet.com/manga/all")
-        soup = BeautifulSoup(r.content, "html5lib")
+        r = await req("https://www.anime-planet.com/manga/all")
+        soup = BeautifulSoup(r, "html5lib")
 
         try:
             x = soup.find_all("ul", {"class": "cardDeck cardGrid"})
@@ -260,3 +264,5 @@ class Manga:
             return list
         except:
             return "We could not find that"
+
+#Made async/aiohttp friendly by TheOnlyWayUp, originally made by centipede000.
