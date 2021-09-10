@@ -7,7 +7,7 @@ Get manga related stuff.
 import requests
 from bs4 import BeautifulSoup
 from AniManga.helpers.MangaHelpers import check_if_exists
-from AniManga.helpers.MangaHelpers import _format as format_manga_name
+from AniManga.helpers.MangaHelpers import mformat as format_manga_name
 
 
 class Manga:
