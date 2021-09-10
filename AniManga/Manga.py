@@ -86,35 +86,35 @@ class Manga:
 
                 reviews.append(string)
 
-            dict = {}
-            dict["title"] = soup.find("meta", property="og:title")["content"]
-            dict["description"] = soup.find("meta", property="og:description")[
+            manga_dict = {}
+            manga_dict["title"] = soup.find("meta", property="og:title")["content"]
+            manga_dict["description"] = soup.find("meta", property="og:description")[
                 "content"
             ]
-            dict["url"] = soup.find("meta", property="og:url")["content"]
-            dict["type"] = soup.find("meta", property="og:type")["content"]
-            dict["size"] = soup.find("div", {"class": "pure-1 md-1-5"}).text.replace(
+            manga_dict["url"] = soup.find("meta", property="og:url")["content"]
+            manga_dict["type"] = soup.find("meta", property="og:type")["content"]
+            manga_dict["size"] = soup.find("div", {"class": "pure-1 md-1-5"}).text.replace(
                 "\n", ""
             )
-            dict["year"] = soup.find("span", {"class": "iconYear"}).text.replace(
+            manga_dict["year"] = soup.find("span", {"class": "iconYear"}).text.replace(
                 "\n", ""
             )
-            dict["rating"] = soup.find("div", {"class": "avgRating"}).text.replace(
+            manga_dict["rating"] = soup.find("div", {"class": "avgRating"}).text.replace(
                 "\n", ""
             )
-            dict["rank"] = rank
-            dict["author"] = soup.find(
+            manga_dict["rank"] = rank
+            manga_dict["author"] = soup.find(
                 "meta", property="book:author")["content"]
-            dict["author"] = dict["author"].replace(
+            manga_dict["author"] = manga_dict["author"].replace(
                 "https://www.anime-planet.com/people/", ""
             )
-            dict["cover"] = soup.find("meta", property="og:image")["content"]
-            dict["tags"] = tags_list
-            dict["content warning"] = warning_list
-            dict["characters"] = characters
-            dict["reviews"] = reviews
+            manga_dict["cover"] = soup.find("meta", property="og:image")["content"]
+            manga_dict["tags"] = tags_list
+            manga_dict["content warning"] = warning_list
+            manga_dict["characters"] = characters
+            manga_dict["reviews"] = reviews
             try:
-                return dict
+                return manga_dict
             except:
                 return "We could not find that. Manga is most likely not available."
         else:
@@ -291,11 +291,11 @@ class Manga:
         try:
             x = soup.find_all("ul", {"class": "cardDeck cardGrid"})
 
-            list = []
+            popular_mangas = []
 
             for ultag in x:
                 for y in ultag.find_all("li"):
                     y = y.text.replace("Add to list ", "").replace("\n", "")
-                    list.append(y)
+                    popular_mangas.append(y)
         except Exception as ex:
             return ex
