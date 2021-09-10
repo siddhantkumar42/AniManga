@@ -58,13 +58,15 @@ class Manga:
 
             warning_list = []
 
-            content_warning = soup.find_all("div", {"class": "tags tags--plain"})
+            content_warning = soup.find_all(
+                "div", {"class": "tags tags--plain"})
 
             for x in content_warning:
                 x = x.text.replace("\n", "").replace("Content Warning", "")
                 warning_list.append(x)
 
-            reviews = rsoup.find_all("div", {"class": "pure-1 userContent readMore"})
+            reviews = rsoup.find_all(
+                "div", {"class": "pure-1 userContent readMore"})
             review_list = []
 
             for x in reviews:
@@ -101,7 +103,8 @@ class Manga:
                 "\n", ""
             )
             dict["rank"] = rank
-            dict["author"] = soup.find("meta", property="book:author")["content"]
+            dict["author"] = soup.find(
+                "meta", property="book:author")["content"]
             dict["author"] = dict["author"].replace(
                 "https://www.anime-planet.com/people/", ""
             )
@@ -110,7 +113,10 @@ class Manga:
             dict["content warning"] = warning_list
             dict["characters"] = characters
             dict["reviews"] = reviews
-            return dict
+            try:
+                return dict
+            except:
+                return "We could not find that. Manga is most likely not available."
         else:
             return "We could not find that."
 
@@ -121,6 +127,8 @@ class Manga:
         x = self.get_manga_json(manga)
         try:
             return x["description"]
+        except KeyError:
+            return "We could not find characters from that manga, manga most likely isn't available."
         except:
             return "We could not find that"
 
@@ -131,7 +139,9 @@ class Manga:
         x = self.get_manga_json(manga)
         try:
             return x["url"]
-        except:
+        except KeyError:
+            return "We could not find the url of that manga, manga most likely isn't available."
+        except :
             return "We could not find that"
 
     def get_manga_size(self, manga: str) -> str:
@@ -141,8 +151,10 @@ class Manga:
         x = self.get_manga_json(manga)
         try:
             return x["size"]
-        except:
-            return "We could not find that"
+        except KeyError:
+            return "We could not find size of that manga, manga most likely isn't available."
+        except Exception as ex:
+            return ex
 
     def get_manga_year(self, manga: str) -> str:
         """
@@ -151,8 +163,10 @@ class Manga:
         x = self.get_manga_json(manga)
         try:
             return x["year"]
-        except:
-            return "[year] We could not find that"
+        except KeyError:
+            return "We could not find the year of that manga, manga most likely isn't available."
+        except Exception as ex:
+            return ex
 
     def get_manga_rating(self, manga: str) -> str:
         """
@@ -161,8 +175,10 @@ class Manga:
         x = self.get_manga_json(manga)
         try:
             return x["rating"]
-        except:
-            return "We could not find that"
+        except KeyError:
+            return "We could not the rating of that manga, manga most likely isn't available."
+        except Exception as ex:
+            return ex
 
     def get_manga_rank(self, manga: str) -> str:
         """
@@ -171,8 +187,10 @@ class Manga:
         x = self.get_manga_json(manga)
         try:
             return x["rank"]
-        except:
-            return "We could not find that"
+        except KeyError:
+            return "We could not find rank of that manga, manga most likely isn't available."
+        except Exception as ex:
+            return ex
 
     def get_manga_cover(self, manga: str) -> str:
         """
@@ -181,8 +199,10 @@ class Manga:
         x = self.get_manga_json(manga)
         try:
             return x["cover"]
-        except:
-            return "We could not find that"
+        except KeyError:
+            return "We could not find the cover page that manga, manga most likely isn't available."
+        except Exception as ex:
+            return ex
 
     def get_manga_author(self, manga: str) -> str:
         """
@@ -191,8 +211,10 @@ class Manga:
         x = self.get_manga_json(manga)
         try:
             return x["author"]
-        except:
-            return "We could not find that"
+        except KeyError:
+            return "We could not find the author of that manga, manga most likely isn't available."
+        except Exception as ex:
+            return ex
 
     def get_manga_tags(self, manga: str) -> list:
         """
@@ -202,8 +224,10 @@ class Manga:
         x = self.get_manga_json(manga)
         try:
             return x["tags"]
-        except:
-            return "We could not find that"
+        except KeyError:
+            return "We could not find the tags of that manga, manga most likely isn't available."
+        except Exception as ex:
+            return ex
 
     def get_manga_content_warning(self, manga: str) -> list:
         """
@@ -212,8 +236,10 @@ class Manga:
         x = self.get_manga_json(manga)
         try:
             return x["content warning"]
-        except:
-            return "We could not find that"
+        except KeyError:
+            return "We could not find the content warning of that manga, manga most likely isn't available."
+        except Exception as ex:
+            return ex
 
     def get_manga_reviews(self, manga: str) -> list:
         """
@@ -224,14 +250,17 @@ class Manga:
 
         try:
             return x["reviews"]
-        except:
-            return "We could not find that."
+        except KeyError:
+            return "We could not find reviews of that manga, manga most likely isn't available."
+        except Exception as ex:
+            return ex
 
     def get_manga_characters(self, manga: str) -> list:
         """
         Get the characters of a manga.
         """
         manga = format(manga)
+
         r = requests.get(
             "https://www.anime-planet.com/manga/{}/characters".format(manga)
         )
@@ -246,8 +275,10 @@ class Manga:
 
         try:
             return character_list
-        except:
-            return "We could not find that."
+        except KeyError:
+            return "We could not find characters from that manga, manga most likely isn't available."
+        except Exception as ex:
+            return ex 
 
     def get_popular_manga(self) -> list:
         """
@@ -266,7 +297,5 @@ class Manga:
                 for y in ultag.find_all("li"):
                     y = y.text.replace("Add to list ", "").replace("\n", "")
                     list.append(y)
-
-            return list
-        except:
-            return "We could not find that"
+        except Exception as ex:
+            return ex

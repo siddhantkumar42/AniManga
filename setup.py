@@ -5,7 +5,7 @@ import os
 with open("README.md") as f:
     LONGDESCRIPTION = f.read()
 
-VERSION = "0.0.10"
+VERSION = "0.0.11"
 DESCRIPTION = "AniManga is a python module which scrapes the web to get information on Anime, Manga (and hentai)."
 
 # Setting up
@@ -18,7 +18,7 @@ setup(
     long_description_content_type="text/markdown",
     long_description=LONGDESCRIPTION,
     packages=find_packages(),
-    install_requires=["bs4"],
+    install_requires=["bs4","requests","html5lib"],
     keywords=[],
     classifiers=[
         "Development Status :: 1 - Planning",
