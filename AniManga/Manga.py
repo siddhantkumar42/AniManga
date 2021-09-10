@@ -35,7 +35,7 @@ class Manga:
 
         if check_if_exists(manga):
 
-            rank = soup.find_all("div", {"class":"pure-1 md-1-5"})
+            rank = soup.find_all("div", {"class": "pure-1 md-1-5"})
             for x in rank:
                 if x.text.startswith("\nRank"):
                     rank = x.text.replace("\n", "")
@@ -49,17 +49,19 @@ class Manga:
                     tags_list.append(z)
 
             characters = []
-            for x in soup.find_all("strong",{"class":"CharacterCard__title rounded-card__title"}):
+            for x in soup.find_all(
+                "strong", {"class": "CharacterCard__title rounded-card__title"}
+            ):
                 characters.append(x.text)
 
             characters = characters[:-1]
 
             warning_list = []
 
-            content_warning = soup.find_all("div",{"class":"tags tags--plain"})
+            content_warning = soup.find_all("div", {"class": "tags tags--plain"})
 
             for x in content_warning:
-                x = x.text.replace("\n","").replace("Content Warning","")
+                x = x.text.replace("\n", "").replace("Content Warning", "")
                 warning_list.append(x)
 
             reviews = rsoup.find_all("div", {"class": "pure-1 userContent readMore"})
@@ -89,9 +91,15 @@ class Manga:
             ]
             dict["url"] = soup.find("meta", property="og:url")["content"]
             dict["type"] = soup.find("meta", property="og:type")["content"]
-            dict["size"] = soup.find("div", {"class":"pure-1 md-1-5"}).text.replace("\n", "")
-            dict["year"] = soup.find("span", {"class":"iconYear"}).text.replace("\n", "")
-            dict["rating"] = soup.find("div", {"class":"avgRating"}).text.replace("\n","")
+            dict["size"] = soup.find("div", {"class": "pure-1 md-1-5"}).text.replace(
+                "\n", ""
+            )
+            dict["year"] = soup.find("span", {"class": "iconYear"}).text.replace(
+                "\n", ""
+            )
+            dict["rating"] = soup.find("div", {"class": "avgRating"}).text.replace(
+                "\n", ""
+            )
             dict["rank"] = rank
             dict["author"] = soup.find("meta", property="book:author")["content"]
             dict["author"] = dict["author"].replace(
@@ -224,16 +232,18 @@ class Manga:
         Get the characters of a manga.
         """
         manga = format(manga)
-        r = requests.get("https://www.anime-planet.com/manga/{}/characters".format(manga))
+        r = requests.get(
+            "https://www.anime-planet.com/manga/{}/characters".format(manga)
+        )
         soup = BeautifulSoup(r.content, "html5lib")
 
         character_list = []
 
-        characters = soup.find_all("a", {"class":"name"})
+        characters = soup.find_all("a", {"class": "name"})
 
         for i in characters:
             character_list.append(i.text)
-        
+
         try:
             return character_list
         except:
