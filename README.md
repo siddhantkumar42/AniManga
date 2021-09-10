@@ -1,5 +1,5 @@
 ![pypi_version](https://img.shields.io/pypi/v/AniManga?style=flat-square)
-![AniManga](https://img.shields.io/pypi/dm/AniManga?style=flat-square)
+![AniManga](https://img.shields.io/pypi/dd/AniManga?style=flat-square)
 ![issues](https://img.shields.io/github/issues/centipede000/AniManga?style=flat-square)
 ![version](https://img.shields.io/pypi/pyversions/AniManga?style=flat-square)
 
