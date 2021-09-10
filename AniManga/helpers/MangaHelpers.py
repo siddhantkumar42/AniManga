@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
-def check_if_exists(manga:str) -> bool:
+
+def check_if_exists(manga: str) -> bool:
     r = requests.get("https://www.anime-planet.com/manga/{}".format(manga))
     soup = BeautifulSoup(r.content, "html5lib")
 
