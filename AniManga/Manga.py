@@ -265,13 +265,14 @@ class Manga:
             "https://www.anime-planet.com/manga/{}/characters".format(manga)
         )
         soup = BeautifulSoup(r.content, "html5lib")
-
-        character_list = []
         
         try:
+            character_list = []
             characters = soup.find_all("a", {"class": "name"})
             for i in characters:
                 character_list.append(i.text)
+            
+            return character_list
         except:
             return "We could not find characters from that manga, manga most likely doesn't exist."
 
