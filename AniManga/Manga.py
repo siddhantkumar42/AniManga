@@ -6,7 +6,8 @@ Get manga related stuff.
 
 import requests
 from bs4 import BeautifulSoup
-from AniManga.helpers.MangaHelpers import check_if_exists, format
+from AniManga.helpers.MangaHelpers import check_if_exists
+from AniManga.helpers.MangaHelpers import _format as format_manga_name
 
 
 class Manga:
@@ -26,7 +27,7 @@ class Manga:
         """
         Get information on a manga.
         """
-        manga = format(manga)
+        manga = format_manga_name(manga)
         r = requests.get(self.base_manga_url + f"{manga}")
         soup = BeautifulSoup(r.content, "html5lib")
         tags = soup.find_all("div", {"class": "tags"})
@@ -220,7 +221,6 @@ class Manga:
         """
         Get the tags of a manga.
         """
-
         x = self.get_manga_json(manga)
         try:
             return x["tags"]
@@ -259,7 +259,7 @@ class Manga:
         """
         Get the characters of a manga.
         """
-        manga = format(manga)
+        manga = format_manga_name(manga)
 
         r = requests.get(
             "https://www.anime-planet.com/manga/{}/characters".format(manga)
@@ -267,18 +267,15 @@ class Manga:
         soup = BeautifulSoup(r.content, "html5lib")
 
         character_list = []
-
-        characters = soup.find_all("a", {"class": "name"})
-
-        for i in characters:
-            character_list.append(i.text)
-
+        
         try:
-            return character_list
-        except KeyError:
-            return "We could not find characters from that manga, manga most likely isn't available."
-        except Exception as ex:
-            return ex 
+            characters = soup.find_all("a", {"class": "name"})
+            for i in characters:
+                character_list.append(i.text)
+        except:
+            return "We could not find characters from that manga, manga most likely doesn't exist."
+
+
 
     def get_popular_manga(self) -> list:
         """

@@ -14,5 +14,5 @@ def check_if_exists(manga: str) -> bool:
         return True
 
 
-def format(manga: str) -> str:
+def _format(manga: str) -> str:
     return manga.lower().replace(" ", "-")
