@@ -2,6 +2,7 @@
 ![AniManga](https://img.shields.io/pypi/dd/AniManga?style=flat-square)
 ![issues](https://img.shields.io/github/issues/centipede000/AniManga?style=flat-square)
 ![version](https://img.shields.io/pypi/pyversions/AniManga?style=flat-square)
+![codefactor](https://img.shields.io/codefactor/grade/github/centipede000/AniManga?style=flat-square)
 
 # AniManga 
 
