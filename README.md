@@ -47,3 +47,5 @@ Detailed docs will soon be available.
 </tr>
 </thead>
 </table>
+
+**Development branch recieves updates almost daily.**
