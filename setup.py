@@ -19,7 +19,7 @@ setup(
     long_description=LONGDESCRIPTION,
     packages=find_packages(),
     install_requires=["bs4","requests","html5lib"],
-    keywords=[],
+    keywords=["anime","manga","hentai","nhentai","anime planet"],
     classifiers=[
         "Development Status :: 1 - Planning",
         "Intended Audience :: Developers",
