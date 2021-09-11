@@ -423,5 +423,6 @@ class Manga:
                 for y in ultag.find_all("li"):
                     y = y.text.replace("Add to list ", "").replace("\n", "")
                     popular_mangas.append(y)
+            return popular_mangas
         except Exception as ex:
             return ex
