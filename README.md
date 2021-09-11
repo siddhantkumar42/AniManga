@@ -47,3 +47,5 @@ Detailed docs will soon be available.
 </tr>
 </thead>
 </table>
+
+**[Development](https://github.com/centipede000/AniManga/tree/dev) branch recieves updates almost daily.**

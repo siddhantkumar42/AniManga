@@ -15,17 +15,23 @@ class Manga:
     Manga class.
     """
 
-    def __init__(self):
+    def __init__(self, verbose=False):
         """
         __init__
         """
         self.base_manga_url = "https://www.anime-planet.com/manga/"
         self.base_manga_reviews = "https://www.anime-planet.com/manga/{}/reviews"
         self.base_manga_tags = "https://www.anime-planet.com/manga/"
+        self.verbose = verbose
 
     def get_manga_json(self, manga: str) -> dict:
-        """
-        Get information on a manga.
+        """Get information on a manga.
+
+        Args:
+            manga (str): manga name you want to search for.
+
+        Returns:
+            dict: dict with information on the manga.
         """
         manga = format_manga_name(manga)
         r = requests.get(self.base_manga_url + f"{manga}")
@@ -122,142 +128,257 @@ class Manga:
             return "We could not find that."
 
     def get_manga_description(self, manga: str) -> str:
+        """Gets description of a manga.
+
+        Args:
+            manga (str): manga for which description you need.
+
+        Returns:
+            str: description of the manga.
         """
-        Get manga description.
-        """
-        x = self.get_manga_json(manga)
-        try:
-            return x["description"]
-        except KeyError:
-            return "We could not find characters from that manga, manga most likely isn't available."
-        except:
-            return "We could not find that"
+        manga = format_manga_name(manga)
+        r = requests.get(self.base_manga_url + f"{manga}")
+
+        if check_if_exists(manga):
+            soup = BeautifulSoup(r.content, "html5lib")
+            return soup.find("meta", property="og:description")["content"]
+        else:
+            return "Manga could not be found, it most likely doesnt exist."
 
     def get_manga_url(self, manga: str) -> str:
+        """Get Anime-Planet URL of a manga.
+
+        Args:
+            manga (str): manga you want to search for.
+
+        Returns:
+            str: Anime-Planet URL.
         """
-        Get Anime-Planet link of a manga.
-        """
-        x = self.get_manga_json(manga)
-        try:
-            return x["url"]
-        except KeyError:
-            return "We could not find the url of that manga, manga most likely isn't available."
-        except :
-            return "We could not find that"
+        manga = format_manga_name(manga)
+        r = requests.get(self.base_manga_url + f"{manga}")
+
+        if check_if_exists(manga):
+            soup = BeautifulSoup(r.content, "html5lib")
+            return soup.find("meta", property="og:url")["content"]
+        else:
+            return "Manga could not be found, it most likely doesnt exist."
 
     def get_manga_size(self, manga: str) -> str:
+        """Get the chapters/volume of a manga.
+
+        Args:
+            manga (str): manga you want to search for.
+
+        Returns:
+            str: chapters/volume numbers.
         """
-        Get size of a manga.
-        """
-        x = self.get_manga_json(manga)
-        try:
-            return x["size"]
-        except KeyError:
-            return "We could not find size of that manga, manga most likely isn't available."
-        except Exception as ex:
-            return ex
+        manga = format_manga_name(manga)
+        r = requests.get(self.base_manga_url + f"{manga}")
+
+        if check_if_exists(manga):
+            soup = BeautifulSoup(r.content, "html5lib")
+            return soup.find("div", {"class": "pure-1 md-1-5"}).text.replace("\n", "")
+        else:
+            return "Manga could not be found, it most likely doesnt exist."
 
     def get_manga_year(self, manga: str) -> str:
+        """Get the years a manga ran.
+
+        Args:
+            manga (str): manga you want to search for.
+
+        Returns:
+            str: years the manga ran.
         """
-        Get the years the manga ran.
-        """
-        x = self.get_manga_json(manga)
-        try:
-            return x["year"]
-        except KeyError:
-            return "We could not find the year of that manga, manga most likely isn't available."
-        except Exception as ex:
-            return ex
+        manga = format_manga_name(manga)
+        r = requests.get(self.base_manga_url + f"{manga}")
+
+        if check_if_exists(manga):
+            soup = BeautifulSoup(r.content, "html5lib")
+            return soup.find("span", {"class": "iconYear"}).text.replace("\n", "")
+        else:
+            return "Manga could not be found, it most likely doesnt exist."
 
     def get_manga_rating(self, manga: str) -> str:
+        """Get the rating of a manga
+
+        Args:
+            manga (str): manga you want to search for.
+
+        Returns:
+            str: the rating.
         """
-        Get rating of a manga according to Anime-Planet.
-        """
-        x = self.get_manga_json(manga)
-        try:
-            return x["rating"]
-        except KeyError:
-            return "We could not the rating of that manga, manga most likely isn't available."
-        except Exception as ex:
-            return ex
+        manga = format_manga_name(manga)
+        r = requests.get(self.base_manga_url + f"{manga}")
+
+        if check_if_exists(manga):
+            soup = BeautifulSoup(r.content, "html5lib")
+            return soup.find("div", {"class": "avgRating"}).text.replace("\n", "")
+        else:
+            return "Manga could not be found, it most likely doesnt exist."
 
     def get_manga_rank(self, manga: str) -> str:
+        """Get the rank of a manga.
+
+        Args:
+            manga (str): manga you want to search for.
+
+        Returns:
+            str: the rank.
         """
-        Get rank of the manga according to Anime-Planet.
-        """
-        x = self.get_manga_json(manga)
-        try:
-            return x["rank"]
-        except KeyError:
-            return "We could not find rank of that manga, manga most likely isn't available."
-        except Exception as ex:
-            return ex
+        manga = format_manga_name(manga)
+        r = requests.get(self.base_manga_url + f"{manga}")
+
+        if check_if_exists(manga):
+            soup = BeautifulSoup(r.content, "html5lib")
+            rank = soup.find_all("div", {"class": "pure-1 md-1-5"})
+            for x in rank:
+                if x.text.startswith("\nRank"):
+                    rank = x.text.replace("\n", "")
+            return rank
+        else:
+            return "Manga could not be found, it most likely doesnt exist."
 
     def get_manga_cover(self, manga: str) -> str:
+        """Get the cover image url of a manga.
+
+        Args:
+            manga (str): manga you want to search for.
+
+        Returns:
+            str: cover image url. 
         """
-        Get cover image of manga.
-        """
-        x = self.get_manga_json(manga)
-        try:
-            return x["cover"]
-        except KeyError:
-            return "We could not find the cover page that manga, manga most likely isn't available."
-        except Exception as ex:
-            return ex
+        manga = format_manga_name(manga)
+        r = requests.get(self.base_manga_url + f"{manga}")
+
+        if check_if_exists(manga):
+            soup = BeautifulSoup(r.content, "html5lib")
+            return soup.find("meta", property="og:image")["content"]
+        else:
+            return "Manga could not be found, it most likely doesnt exist."
+        
 
     def get_manga_author(self, manga: str) -> str:
+        """Get the author of a manga.
+
+        Args:
+            manga (str): manga you want to search for.
+
+        Returns:
+            str: author.
         """
-        Get author of a manga.
-        """
-        x = self.get_manga_json(manga)
-        try:
-            return x["author"]
-        except KeyError:
-            return "We could not find the author of that manga, manga most likely isn't available."
-        except Exception as ex:
-            return ex
+        manga = format_manga_name(manga)
+        r = requests.get(self.base_manga_url + f"{manga}")
+
+        if check_if_exists(manga):
+            soup = BeautifulSoup(r.content, "html5lib")
+            author = soup.find("meta", property="book:author")["content"]
+            author = author.replace("https://www.anime-planet.com/people/","")
+            return author
+        else:
+            return "Manga could not be found, it most likely doesnt exist."
 
     def get_manga_tags(self, manga: str) -> list:
+        """Get the tags of a manga.
+
+        Args:
+            manga (str): manga you want to search for.
+
+        Returns:
+            list: tags of the manga.
         """
-        Get the tags of a manga.
-        """
-        x = self.get_manga_json(manga)
-        try:
-            return x["tags"]
-        except KeyError:
-            return "We could not find the tags of that manga, manga most likely isn't available."
-        except Exception as ex:
-            return ex
+        manga = format_manga_name(manga)
+        r = requests.get(self.base_manga_url + f"{manga}")
+
+        if check_if_exists(manga):
+            soup = BeautifulSoup(r.content, "html5lib")
+            tags = soup.find_all("div", {"class": "tags"})
+            tags_list = []
+
+            for x in tags:
+                x = x.find_all("li")
+                for z in x:
+                    z = z.text.replace("\n", "")
+                    tags_list.append(z)
+            return tags_list
+        else:
+            return "Manga could not be found, it most likely doesnt exist."
 
     def get_manga_content_warning(self, manga: str) -> list:
+        """Get the content warning of a manga.
+
+        Args:
+            manga (str): manga you want to search for.
+
+        Returns:
+            list: content warning.
         """
-        Get content warning of a manga.
-        """
-        x = self.get_manga_json(manga)
-        try:
-            return x["content warning"]
-        except KeyError:
-            return "We could not find the content warning of that manga, manga most likely isn't available."
-        except Exception as ex:
-            return ex
+        manga = format_manga_name(manga)
+        r = requests.get(self.base_manga_url + f"{manga}")
+
+        if check_if_exists(manga):
+            soup = BeautifulSoup(r.content, "html5lib")
+            warning_list = []
+
+            content_warning = soup.find_all(
+                "div", {"class": "tags tags--plain"})
+
+            for x in content_warning:
+                x = x.text.replace("\n", "").replace("Content Warning", "")
+                warning_list.append(x)
+
+            return warning_list
+        else:
+            return "Manga could not be found, it most likely doesnt exist."
 
     def get_manga_reviews(self, manga: str) -> list:
-        """
-        Get the reviews of a manga.
-        """
+        """Get the reviews of a manga.
 
-        x = self.get_manga_json(manga)
+        Args:
+            manga (str): manga you want to search for.
 
-        try:
-            return x["reviews"]
-        except KeyError:
-            return "We could not find reviews of that manga, manga most likely isn't available."
-        except Exception as ex:
-            return ex
+        Returns:
+            list: reviews of the manga.
+        """
+        manga = format_manga_name(manga)
+        r = requests.get(self.base_manga_url + f"{manga}")
+
+        if check_if_exists(manga):
+            rr = requests.get(self.base_manga_reviews.format(manga))
+            rsoup = BeautifulSoup(rr.content, "html5lib")
+            reviews = rsoup.find_all(
+                "div", {"class": "pure-1 userContent readMore"})
+            
+            review_list = []
+
+            for x in reviews:
+                review_list.append(x)
+
+            reviews = []
+
+            for x in review_list:
+                string = ""
+                while True:
+                    try:
+                        x = x.find("p")
+                        x = x.getText()
+                        string += f"{x}\n"
+                    except:
+                        break
+
+                reviews.append(string)
+            return reviews
+        else:
+            return "Manga could not be found, it most likely doesnt exist."
 
     def get_manga_characters(self, manga: str) -> list:
-        """
-        Get the characters of a manga.
+        """Get the characters of a manga.
+
+        Args:
+            manga (str): manga you want to search for.
+
+        Returns:
+            list: characters.
         """
         manga = format_manga_name(manga)
 
@@ -276,13 +397,15 @@ class Manga:
         except:
             return "We could not find characters from that manga, manga most likely doesn't exist."
 
-
-
     def get_popular_manga(self) -> list:
-        """
-        Gets current popular manga according to Anime-Planet.
-        """
+        """Get currently popular manga.
 
+        Args:
+            manga (str): manga you want to search for.
+
+        Returns:
+            list: popular manga.
+        """
         r = requests.get("https://www.anime-planet.com/manga/all")
         soup = BeautifulSoup(r.content, "html5lib")
 
