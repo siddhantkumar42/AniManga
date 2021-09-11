@@ -7,8 +7,7 @@ Get manga related stuff.
 import requests
 from bs4 import BeautifulSoup
 from AniManga.helpers.MangaHelpers import check_if_exists
-from AniManga.helpers.MangaHelpers import format as format_manga_name
-
+from AniManga.helpers.MangaHelpers import format_ as format_manga_name
 
 class Manga:
     """
@@ -373,9 +372,9 @@ class Manga:
                         break
 
                 reviews.append(string)
-            return reviews
         else:
-            return "Manga could not be found, it most likely doesnt exist."
+            reviews = "Manga could not be found, it most likely doesnt exist."
+        return reviews
 
     def get_manga_characters(self, manga: str) -> list:
         """Get the characters of a manga.
@@ -424,5 +423,6 @@ class Manga:
                 for y in ultag.find_all("li"):
                     y = y.text.replace("Add to list ", "").replace("\n", "")
                     popular_mangas.append(y)
+            return popular_mangas
         except Exception as ex:
             return ex

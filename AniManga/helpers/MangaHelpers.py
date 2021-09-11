@@ -9,10 +9,11 @@ def check_if_exists(manga: str) -> bool:
     results = soup.find("meta", property="og:title")
 
     if not results:
-        return False
+        results = False
     else:
-        return True
+        results = True
+    return results
 
 
-def format(manga: str) -> str:
+def format_(manga: str) -> str:
     return manga.lower().replace(" ", "-")
