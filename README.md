@@ -38,6 +38,7 @@ Detailed docs available [here](https://github.com/centipede000/AniManga/tree/mai
 ## Acknowledgements
 ### Sites scraped:
 - [Anime-Planet](https://animeplanet.com)
+- [nhentai](https://nhentai.net)
 
 ## Author(s):
 <table>
