@@ -88,7 +88,7 @@ class Manga:
                         x = x.find("p")
                         x = x.getText()
                         string += f"{x}\n"
-                    except:
+                    except Exception:
                         break
 
                 reviews.append(string)
@@ -122,7 +122,7 @@ class Manga:
             manga_dict["reviews"] = reviews
             try:
                 return manga_dict
-            except:
+            except Exception:
                 return "We could not find that. Manga is most likely not available."
         else:
             return "We could not find that."
@@ -141,9 +141,10 @@ class Manga:
 
         if check_if_exists(manga):
             soup = BeautifulSoup(r.content, "html5lib")
-            return soup.find("meta", property="og:description")["content"]
+            description = soup.find("meta", property="og:description")["content"]
         else:
-            return "Manga could not be found, it most likely doesnt exist."
+            description = "Manga could not be found, it most likely doesnt exist."
+        return description
 
     def get_manga_url(self, manga: str) -> str:
         """Get Anime-Planet URL of a manga.
@@ -159,9 +160,10 @@ class Manga:
 
         if check_if_exists(manga):
             soup = BeautifulSoup(r.content, "html5lib")
-            return soup.find("meta", property="og:url")["content"]
+            url = soup.find("meta", property="og:url")["content"]
         else:
-            return "Manga could not be found, it most likely doesnt exist."
+            url = "Manga could not be found, it most likely doesnt exist."
+        return url
 
     def get_manga_size(self, manga: str) -> str:
         """Get the chapters/volume of a manga.
@@ -177,9 +179,10 @@ class Manga:
 
         if check_if_exists(manga):
             soup = BeautifulSoup(r.content, "html5lib")
-            return soup.find("div", {"class": "pure-1 md-1-5"}).text.replace("\n", "")
+            size = soup.find("div", {"class": "pure-1 md-1-5"}).text.replace("\n", "")
         else:
-            return "Manga could not be found, it most likely doesnt exist."
+            size = "Manga could not be found, it most likely doesnt exist."
+        return size
 
     def get_manga_year(self, manga: str) -> str:
         """Get the years a manga ran.
@@ -195,9 +198,10 @@ class Manga:
 
         if check_if_exists(manga):
             soup = BeautifulSoup(r.content, "html5lib")
-            return soup.find("span", {"class": "iconYear"}).text.replace("\n", "")
+            year = soup.find("span", {"class": "iconYear"}).text.replace("\n", "")
         else:
-            return "Manga could not be found, it most likely doesnt exist."
+            year = "Manga could not be found, it most likely doesnt exist."
+        return year
 
     def get_manga_rating(self, manga: str) -> str:
         """Get the rating of a manga
@@ -213,9 +217,10 @@ class Manga:
 
         if check_if_exists(manga):
             soup = BeautifulSoup(r.content, "html5lib")
-            return soup.find("div", {"class": "avgRating"}).text.replace("\n", "")
+            rating = soup.find("div", {"class": "avgRating"}).text.replace("\n", "")
         else:
-            return "Manga could not be found, it most likely doesnt exist."
+            rating = "Manga could not be found, it most likely doesnt exist."
+        return rating
 
     def get_manga_rank(self, manga: str) -> str:
         """Get the rank of a manga.
@@ -235,9 +240,9 @@ class Manga:
             for x in rank:
                 if x.text.startswith("\nRank"):
                     rank = x.text.replace("\n", "")
-            return rank
         else:
-            return "Manga could not be found, it most likely doesnt exist."
+            rank = "Manga could not be found, it most likely doesnt exist."
+        return rank
 
     def get_manga_cover(self, manga: str) -> str:
         """Get the cover image url of a manga.
@@ -253,9 +258,10 @@ class Manga:
 
         if check_if_exists(manga):
             soup = BeautifulSoup(r.content, "html5lib")
-            return soup.find("meta", property="og:image")["content"]
+            cover = soup.find("meta", property="og:image")["content"]
         else:
-            return "Manga could not be found, it most likely doesnt exist."
+            cover = "Manga could not be found, it most likely doesnt exist."
+        return cover
         
 
     def get_manga_author(self, manga: str) -> str:
@@ -274,9 +280,9 @@ class Manga:
             soup = BeautifulSoup(r.content, "html5lib")
             author = soup.find("meta", property="book:author")["content"]
             author = author.replace("https://www.anime-planet.com/people/","")
-            return author
         else:
-            return "Manga could not be found, it most likely doesnt exist."
+            author = "Manga could not be found, it most likely doesnt exist."
+        return author
 
     def get_manga_tags(self, manga: str) -> list:
         """Get the tags of a manga.
@@ -300,9 +306,9 @@ class Manga:
                 for z in x:
                     z = z.text.replace("\n", "")
                     tags_list.append(z)
-            return tags_list
         else:
-            return "Manga could not be found, it most likely doesnt exist."
+            tags_list = "Manga could not be found, it most likely doesnt exist."
+        return tags_list
 
     def get_manga_content_warning(self, manga: str) -> list:
         """Get the content warning of a manga.
@@ -327,9 +333,9 @@ class Manga:
                 x = x.text.replace("\n", "").replace("Content Warning", "")
                 warning_list.append(x)
 
-            return warning_list
         else:
-            return "Manga could not be found, it most likely doesnt exist."
+            warning_list = "Manga could not be found, it most likely doesnt exist."
+        return warning_list
 
     def get_manga_reviews(self, manga: str) -> list:
         """Get the reviews of a manga.
@@ -363,7 +369,7 @@ class Manga:
                         x = x.find("p")
                         x = x.getText()
                         string += f"{x}\n"
-                    except:
+                    except Exception as ex:
                         break
 
                 reviews.append(string)
@@ -393,9 +399,9 @@ class Manga:
             for i in characters:
                 character_list.append(i.text)
             
-            return character_list
-        except:
-            return "We could not find characters from that manga, manga most likely doesn't exist."
+        except Exception:
+            character_list = "We could not find characters from that manga, manga most likely doesn't exist."
+        return character_list
 
     def get_popular_manga(self) -> list:
         """Get currently popular manga.
