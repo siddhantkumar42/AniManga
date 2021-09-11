@@ -31,7 +31,7 @@ class Doujin:
         r = requests.get(self.base_doujin_url + "g/" + code)
         s = BeautifulSoup(r.content, "html5lib")
         if s.find("div",{"class":"container error"}):
-            return "Error: Doujin '{}' most likely doesnt exist.".format(code) if not self.verbose else "Error: Doujin '{}' most likely doesnt exist. Possible fixes might be rechecking the name.".format(code)
+            doujin_json = "Error: Doujin '{}' most likely doesnt exist.".format(code) if not self.verbose else "Error: Doujin '{}' most likely doesnt exist. Possible fixes might be rechecking the name.".format(code)
         else:
             doujin_dict = {}
             doujin_dict["title"] = s.find("meta", property="og:title")["content"]
@@ -56,4 +56,6 @@ class Doujin:
                     uploaded_time = i.text
             doujin_dict["uploaded"] = uploaded_time
             doujin_dict["favorites"] = s.find("div",{"class":"buttons"}).find("span",{"class":"nobold"}).text.replace("Favorite","").replace("(","").replace(")","")
-            return doujin_dict
+            doujin_json = doujin_dict
+
+        return doujin_json
