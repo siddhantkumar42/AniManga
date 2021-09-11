@@ -25,7 +25,7 @@ class Doujin:
             code (int): the ~6 digit code used to uniquely identify doujins.
 
         Returns:
-            dict: dict/json with doujin information.
+            dict: dict/json with doujin information (title, cover url, tags, description, languages, type, pages, upload time, favorites).
         """
         code = str(code)
         r = requests.get(self.base_doujin_url + "g/" + code)
@@ -35,7 +35,7 @@ class Doujin:
         else:
             doujin_dict = {}
             doujin_dict["title"] = s.find("meta", property="og:title")["content"]
-            doujin_dict["image"] = s.find("meta", property="og:image")["content"]
+            doujin_dict["cover"] = s.find("meta", property="og:image")["content"]
             doujin_dict["tags"] = s.find("meta",attrs={"name":"twitter:description"})["content"].split(", ")
             doujin_dict["description"] = s.find("meta", attrs={"name":"description"})["content"]
             other_info = s.find_all("div",{"class":"tag-container field-name"})
@@ -50,4 +50,10 @@ class Doujin:
             doujin_dict["languages"] = languages
             doujin_dict["type"] = other_info_list[3][0].text
             doujin_dict["pages"] = other_info_list[4][0].text
+            for i in other_info:
+                i = i.find("time")
+                if i:
+                    uploaded_time = i.text
+            doujin_dict["uploaded"] = uploaded_time
+            doujin_dict["favorites"] = s.find("div",{"class":"buttons"}).find("span",{"class":"nobold"}).text.replace("Favorite","").replace("(","").replace(")","")
             return doujin_dict
