@@ -48,4 +48,4 @@ Detailed docs will soon be available.
 </thead>
 </table>
 
-**Development branch recieves updates almost daily.**
+**[Development](https://github.com/centipede000/AniManga/tree/dev) branch recieves updates almost daily.**
