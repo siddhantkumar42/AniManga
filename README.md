@@ -4,6 +4,12 @@
 ![version](https://img.shields.io/pypi/pyversions/AniManga?style=flat-square)
 ![codefactor](https://img.shields.io/codefactor/grade/github/centipede000/AniManga?style=flat-square)
 
+**DROPPED**
+
+**AniManga will not be getting anymore updates, and the repo will be marked as archived. You are free to fork this repo and make changes.**
+**The package is still usable but might soon be outdated.**
+
+
 # AniManga 
 
 ![python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white) 
